@@ -109,6 +109,11 @@ span.post-tag {
     color: red;
 }
 
-footer{
+body{
+    min-height:100%;
+}
+
+footer {
     padding: 0 !important;
+    height:50px;
 }
