@@ -1,0 +1,259 @@
+﻿@using QuestRoom.Models
+@model IEnumerable<Room>;
+@{
+    ViewData["Title"] = "QuestRoom";
+}
+<section class="section section-lg bg-transparent novi-background" data-preset='{"title":"Blog Boxed","category":"blog","reload":true,"id":"blog-boxed-2"}'>
+    <div class="container">
+        <div class="row row-40 justify-content-lg-between">
+            <div class="col-md-8 post-area">
+                <h1>Quest Rooms</h1>
+                <!-- Post boxed-->
+                @foreach (Room room in Model)
+                {
+                    <div class="post post-boxed">
+                        <div class="post-meta post-meta-between">
+                            <div class="post-meta-item"><a class="post-meta-link post-meta-linkbox post-meta-linkbox-primary" href="/QuestRooms/@room.Id">@room.Company</a></div>
+                            <div class="post-meta-item">
+                                <span>
+                                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                    @room.TimeOfPassing минут
+                                </span>
+                            </div>
+                            <div class="post-meta-item">
+                                <span>
+                                    @{
+                                        for (int i = 0; i < (int)room.Rating; i++)
+                                        {
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                        }
+                                        if ((room.Rating - (int)room.Rating) > 0)
+                                        {
+                                            <i class="fa fa-star-half-o" aria-hidden="true"></i>
+                                        }
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                        <h3 class="post-title"><a href="/QuestRooms/@room.Id">@room.Name</a></h3><a class="post-img-link" href="/QuestRooms/@room.Id"><img src="images/image-05-760x489.jpg" alt="" width="760" height="489" /></a>
+                        <div class="post-text">@room.Description</div>
+                        <div class="post-meta post-meta-between post-meta-lg">
+                            <div class="post-meta-item info">
+                                <div class="post-tags">
+                                    Количество игроков: <span class="post-tag">@room.MinAmountOfPlayers - @room.MaxAmountOfPlayers</span>
+                                </div>
+                                <div class="post-tags">
+                                    Сложность:
+                                    @{
+                                        for (int i = 0; i < room.LevelOfDifficulty; i++)
+                                        {
+                                            <img class="svg-fire" src="~/images/fire.svg" />
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div class="post-meta-item"><a class="btn btn-secondary" href="/QuestRooms/@room.Id">Read more</a></div>
+                        </div>
+                    </div>
+                }
+                <ul class="pag pag-simple">
+                    <li class="pag-simple-item active">
+                        <a class="pag-simple-link" href="#">1</a>
+                    </li>
+                    <li class="pag-simple-item">
+                        <a class="pag-simple-link" href="#">2</a>
+                    </li>
+                    <li class="pag-simple-item">
+                        <a class="pag-simple-link" href="#">3</a>
+                    </li>
+                    <li class="pag-simple-item">
+                        <a class="pag-simple-link inactive" href="#">..</a>
+                    </li>
+                    <li class="pag-simple-item">
+                        <a class="pag-simple-link" href="#">24</a>
+                    </li>
+                    <li class="pag-simple-item">
+                        <a class="pag-simple-link pag-simple-link-next" href="#"><span>Next</span><span class="int-arrow-right novi-icon"></span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4 col-xxl-3 widget-area">
+                <div class="widget widget-search">
+                    <h6 class="widget-title">About us</h6>
+                    <div class="widget-body">
+                        <form class="widget-search-form" action="search-results.html" method="GET" data-rd-search='{"output":".widget-search-results","mode":"live","liveResults":3,"template":"<h6 class=\"search-title\"><a target=\"_top\" href=\"#{href}\" class=\"search-link\">#{title}</a></h6><p>...#{token}...</p>"}'>
+                            <div class="input-group">
+                                <input class="form-control" type="text" placeholder="Search..." autocomplete="off" name="s">
+                                <div class="input-group-append">
+                                    <button class="widget-search-btn input-group-text input-group-text-nodivider novi-icon">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="widget-search-results"></div>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h6 class="widget-title">Categories list</h6>
+                    <div class="widget-body">
+                        <ul class="widget-list">
+                            <li><a class="link-inherit" href="#">News</a></li>
+                            <li><a class="link-inherit" href="#">Trends</a></li>
+                            <li><a class="link-inherit" href="#">Tips</a></li>
+                            <li><a class="link-inherit" href="#">Design tools</a></li>
+                            <li><a class="link-inherit" href="#">Web development</a></li>
+                            <li><a class="link-inherit" href="#">Resources</a></li>
+                            <li><a class="link-inherit" href="#">Portfolio inspiration</a></li>
+                            <li><a class="link-inherit" href="#">Reviews</a></li>
+                            <li><a class="link-inherit" href="#">Graphics</a></li>
+                            <li><a class="link-inherit" href="#">UI/UX design</a></li>
+                            <li><a class="link-inherit" href="#">Interviews</a></li>
+                            <li><a class="link-inherit" href="#">Content ideas</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h6 class="widget-title">Recent post</h6>
+                    <div class="widget-body post-area">
+                        <!-- Post simple-->
+                        <div class="post post-simple post-sm">
+                            <h5 class="post-title"><a href="post-intro.html">This year’s top 10 essential design trends</a></h5>
+                            <div class="post-meta">
+                                <div class="post-meta-item"><a class="post-meta-link post-meta-link-primary" href="post-intro.html">HTML</a></div>
+                                <div class="post-meta-item"><span class="post-meta-icon int-clock novi-icon"></span><a class="post-meta-link" href="post-intro.html">September 16, 2019</a></div>
+                            </div>
+                        </div>
+                        <!-- Post simple-->
+                        <div class="post post-simple post-sm">
+                            <h5 class="post-title"><a href="post-intro.html">15 impressive examples of one-page website design</a></h5>
+                            <div class="post-meta">
+                                <div class="post-meta-item"><a class="post-meta-link post-meta-link-primary" href="post-intro.html">HTML</a></div>
+                                <div class="post-meta-item"><span class="post-meta-icon int-clock novi-icon"></span><a class="post-meta-link" href="post-intro.html">September 16, 2019</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h6 class="widget-title">About us</h6>
+                    <div class="widget-body">
+                        <!-- Post simple-->
+                        <div class="post post-simple post-sm">
+                            <a class="post-img-link" href="about-us.html"><img src="images/image-17-310x200.jpg" alt="" width="310" height="200" /></a>
+                            <h5 class="post-title"><a href="about-us.html">Intense is the most powerful Bootstrap theme</a></h5>
+                            <div class="post-text">I’ve always cared about great visual design, but a few years ago I learned that I loved to teach as well. That led to starting this blog, building iPhone apps...</div><a class="btn btn-secondary post-btn" href="about-us.html">Read more</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h6 class="widget-title">Tags</h6>
+                    <div class="widget-body">
+                        <div class="tag-container">
+                            <a class="tag tag-light" href="#">Web design</a><a class="tag tag-light" href="#">UI/UX</a><a class="tag tag-light" href="#">Tips</a><a class="tag tag-light" href="#">Development</a><a class="tag tag-light" href="#">Inspiration</a>
+                            <a class="tag tag-light" href="#">Graphic design</a><a class="tag tag-light" href="#">Design ideas</a><a class="tag tag-light" href="#">Portfolios</a><a class="tag tag-light" href="#">Trends</a><a class="tag tag-light" href="#">Articles</a><a class="tag tag-light"
+                                                                                                                                                                                                                                                                               href="#">Tools for design</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h6 class="widget-title">Our gallery</h6>
+                    <div class="widget-body">
+                        <div class="group-5" data-lightgallery>
+                            <a class="thumbnail thumbnail-small lightgallery-item" href="images/image-13-1200x800.jpg"><img src="images/image-13-68x68.jpg" alt="" width="68" height="68" /></a><a class="thumbnail thumbnail-small lightgallery-item" href="images/image-06-1200x800.jpg"><img src="images/image-06-68x68.jpg" alt="" width="68" height="68" /></a>
+                            <a class="thumbnail thumbnail-small lightgallery-item" href="images/image-05-1200x800.jpg"><img src="images/image-05-68x68.jpg" alt="" width="68" height="68" /></a><a class="thumbnail thumbnail-small lightgallery-item" href="images/image-14-1200x800.jpg"><img src="images/image-14-68x68.jpg" alt="" width="68" height="68" /></a>
+                            <a class="thumbnail thumbnail-small lightgallery-item" href="images/image-15-1200x800.jpg"><img src="images/image-15-68x68.jpg" alt="" width="68" height="68" /></a><a class="thumbnail thumbnail-small lightgallery-item" href="images/image-07-1200x800.jpg"><img src="images/image-07-68x68.jpg" alt="" width="68" height="68" /></a>
+                            <a class="thumbnail thumbnail-small lightgallery-item" href="images/image-16-1200x800.jpg"><img src="images/image-16-68x68.jpg" alt="" width="68" height="68" /></a><a class="thumbnail thumbnail-small lightgallery-item" href="images/image-17-1200x800.jpg"><img src="images/image-17-68x68.jpg" alt="" width="68" height="68" /></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@*<table>
+        <tr>
+            <td>
+                Name
+            </td>
+            <td>
+                Description
+            </td>
+            <td>
+                Time Of Passing
+            </td>
+            <td>
+                Min Amount Of Players
+            </td>
+            <td>
+                Max Amount Of Players
+            </td>
+            <td>
+                Min Age
+            </td>
+            <td>
+                Address
+            </td>
+            <td>
+                Email
+            </td>
+            <td>
+                PhoneNumber
+            </td>
+            <td>
+                Company
+            </td>
+            <td>
+                Rating
+            </td>
+            <td>
+                Level Of Fear
+            </td>
+            <td>
+                Level Of Difficulty
+            </td>
+        </tr>
+        @foreach (Room room in Model)
+        {
+            <tr>
+                <td>
+                    @room.Name
+                </td>
+                <td>
+                    @room.Description
+                </td>
+                <td>
+                    @room.TimeOfPassing
+                </td>
+                <td>
+                    @room.MinAmountOfPlayers
+                </td>
+                <td>
+                    @room.MaxAmountOfPlayers
+                </td>
+                <td>
+                    @room.MinAge
+                </td>
+                <td>
+                    @room.Address
+                </td>
+                <td>
+                    @room.Email
+                </td>
+                <td>
+                    @room.PhoneNumber
+                </td>
+                <td>
+                    @room.Company
+                </td>
+                <td>
+                    @room.Rating
+                </td>
+                <td>
+                    @room.LevelOfFear
+                </td>
+                <td>
+                    @room.LevelOfDifficulty
+                </td>
+            </tr>
+        }
+    </table>*@
