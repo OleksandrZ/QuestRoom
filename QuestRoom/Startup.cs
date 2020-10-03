@@ -63,7 +63,7 @@ namespace QuestRoom
                 endpoints.MapControllerRoute(
                     name: "questroombyid",
                     pattern: "questrooms/{id}",
-                    defaults: new { controller = "QuestRoom", action = "QuestRoom" }
+                    defaults: new { controller = "QuestRoom", action = "Details" }
                     );
                 endpoints.MapControllerRoute(
                     name: "createquestroom",
@@ -74,6 +74,11 @@ namespace QuestRoom
                     name: "editquestroom",
                     pattern: "questrooms/edit/{id}",
                     defaults: new { controller = "QuestRoom", action = "Edit" }
+                    );
+                endpoints.MapControllerRoute(
+                    name: "editquestroom",
+                    pattern: "questrooms/delete/{id}",
+                    defaults: new { controller = "QuestRoom", action = "Delete" }
                     );
             });
         }

@@ -14,7 +14,7 @@ namespace QuestRoom.Controllers
             this.context = context;
         }
 
-        public async Task<IActionResult> QuestRoom(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -26,7 +26,7 @@ namespace QuestRoom.Controllers
                 return NotFound();
             }
 
-            return View("QuestRoom", room);
+            return View(room);
         }
 
         public async Task<IActionResult> Index()

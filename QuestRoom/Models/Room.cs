@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 namespace QuestRoom.Models
 {
+    public enum Difficulty
+    {
+        Begginer = 1,
+        Easy,
+        Normal,
+        Hard,
+        Expert
+    }
     public class Room
     {
         public int Id { get; set; }
@@ -32,6 +40,6 @@ namespace QuestRoom.Models
         public float Rating { get; set; }
         public int LevelOfFear { get; set; }
         [Range(1, 5)]
-        public int LevelOfDifficulty { get; set; }
+        public Difficulty LevelOfDifficulty { get; set; }
     }
 }

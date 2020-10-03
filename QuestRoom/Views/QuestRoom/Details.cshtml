@@ -1,0 +1,89 @@
+﻿@model Room
+@{
+    ViewData["Title"] = "QuestRoom";
+}
+<table>
+    <tr>
+        <td>
+            Name
+        </td>
+        <td>
+            Description
+        </td>
+        <td>
+            Time Of Passing
+        </td>
+        <td>
+            Min Amount Of Players
+        </td>
+        <td>
+            Max Amount Of Players
+        </td>
+        <td>
+            Min Age
+        </td>
+        <td>
+            Address
+        </td>
+        <td>
+            Email
+        </td>
+        <td>
+            PhoneNumber
+        </td>
+        <td>
+            Company
+        </td>
+        <td>
+            Rating
+        </td>
+        <td>
+            Level Of Fear
+        </td>
+        <td>
+            Level Of Difficulty
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            @Html.DisplayFor(model => model.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.TimeOfPassing)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.MinAmountOfPlayers)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.MaxAmountOfPlayers)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.MinAge)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Address)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Company)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Rating)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.LevelOfFear)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.LevelOfDifficulty)
+        </td>
+    </tr>
+</table>
