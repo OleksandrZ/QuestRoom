@@ -9,10 +9,9 @@ namespace QuestRoom.Data
         {
             context.Database.EnsureCreated();
 
-            // Look for any students.
             if (context.Rooms.Any())
             {
-                return;   // DB has been seeded
+                return;
             }
 
             var rooms = new Room[]

@@ -1,5 +1,5 @@
 ﻿@using QuestRoom.Models
-@model IEnumerable<Room>;
+@model PaginatedList<Room> 
 @{
     ViewData["Title"] = "QuestRoom";
 }
@@ -56,34 +56,35 @@
                         </div>
                     </div>
                 }
-                <ul class="pag pag-simple">
-                    <li class="pag-simple-item active">
-                        <a class="pag-simple-link" href="#">1</a>
-                    </li>
-                    <li class="pag-simple-item">
-                        <a class="pag-simple-link" href="#">2</a>
-                    </li>
-                    <li class="pag-simple-item">
-                        <a class="pag-simple-link" href="#">3</a>
-                    </li>
-                    <li class="pag-simple-item">
-                        <a class="pag-simple-link inactive" href="#">..</a>
-                    </li>
-                    <li class="pag-simple-item">
-                        <a class="pag-simple-link" href="#">24</a>
-                    </li>
-                    <li class="pag-simple-item">
-                        <a class="pag-simple-link pag-simple-link-next" href="#"><span>Next</span><span class="int-arrow-right novi-icon"></span></a>
-                    </li>
-                </ul>
+                @{
+                    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+                }
+
+                <a asp-action="Index"
+                   asp-route-CurrentDifficulty="@ViewData["CurrentDifficulty"]"
+                   asp-route-CurrentAmount="@ViewData["CurrentAmount"])"
+                   asp-route-CurrentFear="@ViewData["CurrentFear"])"
+                   asp-route-page="@(Model.PageIndex - 1)"
+                   class="btn btn-default @prevDisabled">
+                    Previous
+                </a>
+                <a asp-action="Index"
+                   asp-route-CurrentDifficulty="@ViewData["CurrentDifficulty"]"
+                   asp-route-CurrentAmount="@ViewData["CurrentAmount"])"
+                   asp-route-CurrentFear="@ViewData["CurrentFear"])"
+                   asp-route-page="@(Model.PageIndex + 1)"
+                   class="btn btn-default @nextDisabled">
+                    Next
+                </a>
             </div>
             <div class="col-md-4 col-xxl-3 widget-area">
                 <div class="widget widget-search">
                     <h6 class="widget-title">About us</h6>
                     <div class="widget-body">
-                        <form class="widget-search-form" action="search-results.html" method="GET">
+                        <form class="widget-search-form" asp-action="Index" method="GET">
                             <div class="input-group">
-                                <input class="form-control" type="text" placeholder="Search..." autocomplete="off" name="s">
+                                <input class="form-control" name="SearchString" value="@ViewData["CurrentSearch"]" type="text" placeholder="Search..." autocomplete="off">
                                 <div class="input-group-append">
                                     <button class="widget-search-btn input-group-text input-group-text-nodivider novi-icon">
                                         <i class="fa fa-search" aria-hidden="true"></i>
@@ -100,47 +101,55 @@
 
                         @{
                             Difficulty difficulty = Difficulty.Begginer;
+                            bool check = false;
                             for (; difficulty <= Difficulty.Expert; difficulty++)
                             {
+                                check = false;
+                                foreach (var item in ViewData["CurrentDifficulty"] as List<string>)
+                                {
+                                    if (item.Equals(difficulty.ToString()))
+                                    {
+                                        check = true;
+                                    }
+                                }
 
-                                <p><label><input id="@difficulty" name="difficulty;" type="checkbox" class="" /> @difficulty</label></p>
-
+                                <p><input name="difficulties" id="@difficulty" value="@difficulty" type="checkbox" checked="@check"> <label for="@difficulty">@difficulty</label></p>
                             }
                         }
                     </div>
                     <h6 class="widget-title">Amount of players:</h6>
                     <div class="widget-body">
-                        @*<ul class="widget-list">
-                                <li><a class="link-inherit" href="#">News</a></li>
-                                <li><a class="link-inherit" href="#">Trends</a></li>
-                                <li><a class="link-inherit" href="#">Tips</a></li>
-                                <li><a class="link-inherit" href="#">Design tools</a></li>
-                                <li><a class="link-inherit" href="#">Web development</a></li>
-                                <li><a class="link-inherit" href="#">Resources</a></li>
-                                <li><a class="link-inherit" href="#">Portfolio inspiration</a></li>
-                                <li><a class="link-inherit" href="#">Reviews</a></li>
-                                <li><a class="link-inherit" href="#">Graphics</a></li>
-                                <li><a class="link-inherit" href="#">UI/UX design</a></li>
-                                <li><a class="link-inherit" href="#">Interviews</a></li>
-                                <li><a class="link-inherit" href="#">Content ideas</a></li>
-                            </ul>*@
+                        @if ((ViewData["CurrentAmount"] as List<string>).Count > 0)
+                        {
+                            <input class="amount" name="Amount" value="@((ViewData["CurrentAmount"] as List<string>)[0])" type="text" placeholder="Min" />
+                            <span>-</span>
+                            <input class="amount" name="Amount" value="@((ViewData["CurrentAmount"] as List<string>)[1])" type="text" placeholder="Max" />
+                        }
+                        else
+                        {
+                            <input class="amount" name="Amount" value="1" type="text" placeholder="Min" />
+                            <span>-</span>
+                            <input class="amount" name="Amount" value="20" type="text" placeholder="Max" />
+                        }
+                        @**@
                     </div>
                     <h6 class="widget-title">Level of fear:</h6>
                     <div class="widget-body">
-                        @*<ul class="widget-list">
-                                <li><a class="link-inherit" href="#">News</a></li>
-                                <li><a class="link-inherit" href="#">Trends</a></li>
-                                <li><a class="link-inherit" href="#">Tips</a></li>
-                                <li><a class="link-inherit" href="#">Design tools</a></li>
-                                <li><a class="link-inherit" href="#">Web development</a></li>
-                                <li><a class="link-inherit" href="#">Resources</a></li>
-                                <li><a class="link-inherit" href="#">Portfolio inspiration</a></li>
-                                <li><a class="link-inherit" href="#">Reviews</a></li>
-                                <li><a class="link-inherit" href="#">Graphics</a></li>
-                                <li><a class="link-inherit" href="#">UI/UX design</a></li>
-                                <li><a class="link-inherit" href="#">Interviews</a></li>
-                                <li><a class="link-inherit" href="#">Content ideas</a></li>
-                            </ul>*@
+                        @{
+                            for (int i = 1; i <= 5; i++)
+                            {
+                                check = false;
+                                foreach (var item in ViewData["CurrentFear"] as List<string>)
+                                {
+                                    if (item.Equals(i.ToString()))
+                                    {
+                                        check = true;
+                                    }
+                                }
+
+                                <p><input name="Fear" id="fear @i" value="@i" type="checkbox" checked="@check"> <label for="fear @i">@i</label></p>
+                            }
+                        }
                     </div>
                     <button class="btn btn-primary" type="submit">Filter</button>
                 </form>

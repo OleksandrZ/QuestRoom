@@ -118,6 +118,11 @@ footer {
     height:50px;
 }
 
-label{
-    display:"block";
+.widget-body p{
+    margin-bottom:0;
+}
+
+.amount{
+    display:inline;
+    width:15%;
 }

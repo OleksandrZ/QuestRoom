@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuestRoom.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace QuestRoom.Controllers
@@ -29,9 +31,48 @@ namespace QuestRoom.Controllers
             return View(room);
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string SearchString, string[] difficulties, string[] Amount, string[] Fear, int? page)
         {
-            return View(await context.Rooms.ToListAsync());
+            if (SearchString != null)
+            {
+                page = 1;
+            }
+
+            var rooms = from room in context.Rooms
+                        select room;
+
+            List<Room> roomsList;
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                rooms = rooms.Where(r => r.Name.Contains(SearchString));
+                roomsList = await rooms.ToListAsync();
+            }
+            else
+            {
+                roomsList = await rooms.ToListAsync();
+                if (difficulties.Length > 0)
+                {
+                    roomsList = roomsList.Where(r => difficulties.Contains(r.LevelOfDifficulty.ToString())).ToList();
+                }
+                if (Amount.Length > 0)
+                {
+                    int min = int.Parse(Amount[0]);
+                    int max = int.Parse(Amount[1]);
+
+                    roomsList = roomsList.Where(r => r.MinAmountOfPlayers >= min && r.MaxAmountOfPlayers <= max).ToList();
+                }
+                if (Fear.Length > 0)
+                {
+                    roomsList = roomsList.Where(r => Fear.Contains(r.LevelOfFear.ToString())).ToList();
+                }
+            }
+            ViewData["CurrentSearch"] = SearchString;
+            ViewData["CurrentDifficulty"] = difficulties.ToList();
+            ViewData["CurrentAmount"] = Amount.ToList();
+            ViewData["CurrentFear"] = Fear.ToList();
+
+            int pageSize = 3;
+            return View(PaginatedList<Room>.Create(roomsList, page ?? 1, pageSize));
         }
 
         public IActionResult Create()
