@@ -1,7 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+<<<<<<< Updated upstream
 using QuestRoom.Models;
 using System.Collections.Generic;
+=======
+using Microsoft.Extensions.Configuration;
+using QuestRoom.Models;
+using QuestRoom.ViewModel;
+using System;
+using System.Collections.Generic;
+using System.IO;
+>>>>>>> Stashed changes
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,8 +19,19 @@ namespace QuestRoom.Controllers
     public class QuestRoomController : Controller
     {
         private readonly QuestRoomContext context;
+<<<<<<< Updated upstream
 
         public QuestRoomController(QuestRoomContext context)
+=======
+
+        //public BufferedMultipleFileUploadDb FileUpload { get; set; }
+        private readonly long _fileSizeLimit;
+        private readonly string[] _permittedExtensions = { ".txt", ".jpg" };
+
+        public object Environment { get; private set; }
+
+        public QuestRoomController(QuestRoomContext context, IConfiguration config)
+>>>>>>> Stashed changes
         {
             this.context = context;
         }
@@ -85,12 +105,38 @@ namespace QuestRoom.Controllers
         public async Task<IActionResult> Create(
             [Bind("Name,Description,MinAmountOfPlayers," +
             "Address,TimeOfPassing,MaxAmountOfPlayers,MinAge," +
+<<<<<<< Updated upstream
             "PhoneNumber,Email,Company,Rating,LevelOfFear,LevelOfDifficulty")] Room room)
+=======
+            "PhoneNumber,Email,Company,Rating,LevelOfFear,LevelOfDifficulty,Files")] RoomViewModel rvm)
+>>>>>>> Stashed changes
         {
+            Room room = rvm;
+            room.Images = new List<Image>();
+            //Room room = new Room();
             try
             {
                 if (ModelState.IsValid)
                 {
+<<<<<<< Updated upstream
+=======
+                    if (rvm.Files.Count > 0)
+                    {
+                        foreach (var image in rvm.Files)
+                        {
+                            Image img = new Image();
+                            byte[] imageData = null;
+                            using (var binaryReader = new BinaryReader(image.OpenReadStream()))
+                            {
+                                imageData = binaryReader.ReadBytes((int)image.Length);
+                            }
+                            img.Name = image.FileName;
+                            img.Content = imageData;
+                            img.Extension = image.ContentType;
+                            room.Images.Add(img);
+                        }
+                    }
+>>>>>>> Stashed changes
                     context.Rooms.Add(room);
                     await context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));

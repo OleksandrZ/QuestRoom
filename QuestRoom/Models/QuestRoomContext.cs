@@ -16,5 +16,6 @@ namespace QuestRoom.Models
         {
         }
         public DbSet<Room> Rooms { get; set; }
+        //public DbSet<Image> Images { get; set; }
     }
 }

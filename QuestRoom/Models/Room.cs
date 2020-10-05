@@ -41,5 +41,6 @@ namespace QuestRoom.Models
         public int LevelOfFear { get; set; }
         [Range(1, 5)]
         public Difficulty LevelOfDifficulty { get; set; }
+        public List<Image> Images { get; set; }
     }
 }
