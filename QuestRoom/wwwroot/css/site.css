@@ -126,3 +126,13 @@ footer {
     display:inline;
     width:15%;
 }
+
+#images{
+    display:flex;
+    flex-wrap:wrap;
+}
+
+.img{
+    flex-basis:15%;
+    margin:5px;
+}

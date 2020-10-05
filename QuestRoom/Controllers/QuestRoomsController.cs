@@ -1,39 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-<<<<<<< Updated upstream
-using QuestRoom.Models;
-using System.Collections.Generic;
-=======
 using Microsoft.Extensions.Configuration;
 using QuestRoom.Models;
+using QuestRoom.Utilities;
 using QuestRoom.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
->>>>>>> Stashed changes
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace QuestRoom.Controllers
 {
-    public class QuestRoomController : Controller
+    public class QuestRoomsController : Controller
     {
         private readonly QuestRoomContext context;
-<<<<<<< Updated upstream
-
-        public QuestRoomController(QuestRoomContext context)
-=======
 
         //public BufferedMultipleFileUploadDb FileUpload { get; set; }
         private readonly long _fileSizeLimit;
-        private readonly string[] _permittedExtensions = { ".txt", ".jpg" };
 
+        private readonly string[] _permittedExtensions = { ".jpg", ".gif", ".png" };
         public object Environment { get; private set; }
 
-        public QuestRoomController(QuestRoomContext context, IConfiguration config)
->>>>>>> Stashed changes
+        public QuestRoomsController(QuestRoomContext context, IConfiguration config)
         {
             this.context = context;
+            _fileSizeLimit = config.GetValue<long>("FileSizeLimit");
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -57,9 +49,9 @@ namespace QuestRoom.Controllers
             {
                 page = 1;
             }
-
-            var rooms = from room in context.Rooms
-                        select room;
+            var rooms = context.Rooms.Include("Images");
+            //var rooms = from room in context.Rooms
+            //            select room;
 
             List<Room> roomsList;
             if (!string.IsNullOrEmpty(SearchString))
@@ -87,11 +79,12 @@ namespace QuestRoom.Controllers
                 }
             }
             ViewData["CurrentSearch"] = SearchString;
-            ViewData["CurrentDifficulty"] = difficulties.ToList();
-            ViewData["CurrentAmount"] = Amount.ToList();
-            ViewData["CurrentFear"] = Fear.ToList();
+            ViewData["CurrentDifficulty"] = difficulties;
+            ViewData["CurrentAmount"] = Amount;
+            ViewData["CurrentFear"] = Fear;
 
             int pageSize = 3;
+            roomsList = roomsList.OrderBy(r => r.Name).ToList();
             return View(PaginatedList<Room>.Create(roomsList, page ?? 1, pageSize));
         }
 
@@ -105,38 +98,45 @@ namespace QuestRoom.Controllers
         public async Task<IActionResult> Create(
             [Bind("Name,Description,MinAmountOfPlayers," +
             "Address,TimeOfPassing,MaxAmountOfPlayers,MinAge," +
-<<<<<<< Updated upstream
-            "PhoneNumber,Email,Company,Rating,LevelOfFear,LevelOfDifficulty")] Room room)
-=======
             "PhoneNumber,Email,Company,Rating,LevelOfFear,LevelOfDifficulty,Files")] RoomViewModel rvm)
->>>>>>> Stashed changes
         {
             Room room = rvm;
             room.Images = new List<Image>();
-            //Room room = new Room();
             try
             {
                 if (ModelState.IsValid)
                 {
-<<<<<<< Updated upstream
-=======
                     if (rvm.Files.Count > 0)
                     {
                         foreach (var image in rvm.Files)
                         {
                             Image img = new Image();
                             byte[] imageData = null;
-                            using (var binaryReader = new BinaryReader(image.OpenReadStream()))
+                            var stream = image.OpenReadStream();
+                            if (FileHelper.IsValidFileExtensionAndSignature(image.FileName, stream, _permittedExtensions))
                             {
-                                imageData = binaryReader.ReadBytes((int)image.Length);
+                                if(stream.Length > _fileSizeLimit)
+                                {
+                                    var megabyteSizeLimit = _fileSizeLimit / 1048576;
+                                    ModelState.AddModelError("Files", $"One or more files exceed {megabyteSizeLimit:N1} MB");
+                                    return View(room);
+                                }
+                                using (var binaryReader = new BinaryReader(image.OpenReadStream()))
+                                {
+                                    imageData = binaryReader.ReadBytes((int)image.Length);
+                                }
+                                img.Name = image.FileName;
+                                img.Content = imageData;
+                                img.ContentType = image.ContentType;
+                                room.Images.Add(img);
                             }
-                            img.Name = image.FileName;
-                            img.Content = imageData;
-                            img.Extension = image.ContentType;
-                            room.Images.Add(img);
+                            else
+                            {
+                                ModelState.AddModelError("Files", "One or more files have wrong type");
+                                return View(room);
+                            }
                         }
                     }
->>>>>>> Stashed changes
                     context.Rooms.Add(room);
                     await context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -214,7 +214,8 @@ namespace QuestRoom.Controllers
                 return NotFound();
             }
 
-            var room = await context.Rooms.FindAsync(id);
+            var rooms = await context.Rooms.Include("Images").ToListAsync();
+            var room = rooms.Find(r => r.Id == id);
 
             if (room == null)
             {
@@ -235,7 +236,8 @@ namespace QuestRoom.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeletePost(int id)
         {
-            var deleteRoom = await context.Rooms.FindAsync(id);
+            var rooms = await context.Rooms.Include("Images").ToListAsync();
+            var deleteRoom = rooms.Find(r => r.Id == id);
             if (deleteRoom == null)
             {
                 return RedirectToAction(nameof(Index));

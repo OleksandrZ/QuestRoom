@@ -1,5 +1,5 @@
 ﻿@using QuestRoom.Models
-@model PaginatedList<Room> 
+@model PaginatedList<Room>
 @{
     ViewData["Title"] = "QuestRoom";
 }
@@ -35,7 +35,19 @@
                                 </span>
                             </div>
                         </div>
-                        <h3 class="post-title"><a href="/QuestRooms/@room.Id">@room.Name</a></h3><a class="post-img-link" href="/QuestRooms/@room.Id"><img src="images/image-05-760x489.jpg" alt="" width="760" height="489" /></a>
+                        <h3 class="post-title">
+                            <a href="/QuestRooms/@room.Id">@room.Name</a>
+                        </h3>
+                        <a class="post-img-link" href="/QuestRooms/@room.Id">
+                            @if (room.Images.Count > 0)
+                            {
+                                <img src="@("data:image/jpg;base64," + Convert.ToBase64String(room.Images[0].Content))" alt="" width="760" height="489" />
+                            }
+                            else
+                            {
+                                <img src="images/image-05-760x489.jpg" alt="" width="760" height="489" />
+                            }
+                        </a>
                         <div class="post-text">@room.Description</div>
                         <div class="post-meta post-meta-between post-meta-lg">
                             <div class="post-meta-item info">
@@ -60,23 +72,40 @@
                     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
                     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
                 }
-
-                <a asp-action="Index"
-                   asp-route-CurrentDifficulty="@ViewData["CurrentDifficulty"]"
-                   asp-route-CurrentAmount="@ViewData["CurrentAmount"])"
-                   asp-route-CurrentFear="@ViewData["CurrentFear"])"
-                   asp-route-page="@(Model.PageIndex - 1)"
-                   class="btn btn-default @prevDisabled">
+                <a href="@(Url.Page("", new
+                     {
+                         difficulties = ViewData["CurrentDifficulty"] as string[],
+                         Amount = ViewData["CurrentAmount"] as string[],
+                         Fear = ViewData["CurrentFear"] as string[],
+                         page = Model.PageIndex - 1
+                     }))" class="btn btn-default @prevDisabled">
                     Previous
                 </a>
-                <a asp-action="Index"
-                   asp-route-CurrentDifficulty="@ViewData["CurrentDifficulty"]"
-                   asp-route-CurrentAmount="@ViewData["CurrentAmount"])"
-                   asp-route-CurrentFear="@ViewData["CurrentFear"])"
-                   asp-route-page="@(Model.PageIndex + 1)"
-                   class="btn btn-default @nextDisabled">
+                <a href="@(Url.Page("", new
+                     {
+                         difficulties = ViewData["CurrentDifficulty"] as string[],
+                         Amount = ViewData["CurrentAmount"] as string[],
+                         Fear = ViewData["CurrentFear"] as string[],
+                         page = Model.PageIndex + 1
+                     }))" class="btn btn-default @nextDisabled">
                     Next
                 </a>
+                @*<a asp-action="Index"
+                       asp-route-difficulties="@difficulties"
+                       asp-route-Amount="@amount"
+                       asp-route-Fear="@fearLevel"
+                       asp-route-page="@(Model.PageIndex - 1)"
+                       class="btn btn-default @prevDisabled">
+                        Previous
+                    </a>
+                    <a asp-action="Index"
+                       asp-route-difficulties="@difficulties"
+                       asp-route-Amount="@amount"
+                       asp-route-Fear="@fearLevel"
+                       asp-route-page="@(Model.PageIndex + 1)"
+                       class="btn btn-default @nextDisabled">
+                        Next
+                    </a>*@
             </div>
             <div class="col-md-4 col-xxl-3 widget-area">
                 <div class="widget widget-search">
@@ -105,7 +134,7 @@
                             for (; difficulty <= Difficulty.Expert; difficulty++)
                             {
                                 check = false;
-                                foreach (var item in ViewData["CurrentDifficulty"] as List<string>)
+                                foreach (var item in ViewData["CurrentDifficulty"] as string[])
                                 {
                                     if (item.Equals(difficulty.ToString()))
                                     {
@@ -119,11 +148,11 @@
                     </div>
                     <h6 class="widget-title">Amount of players:</h6>
                     <div class="widget-body">
-                        @if ((ViewData["CurrentAmount"] as List<string>).Count > 0)
+                        @if ((ViewData["CurrentAmount"] as string[]).Length > 0)
                         {
-                            <input class="amount" name="Amount" value="@((ViewData["CurrentAmount"] as List<string>)[0])" type="text" placeholder="Min" />
+                            <input class="amount" name="Amount" value="@((ViewData["CurrentAmount"] as string[])[0])" type="text" placeholder="Min" />
                             <span>-</span>
-                            <input class="amount" name="Amount" value="@((ViewData["CurrentAmount"] as List<string>)[1])" type="text" placeholder="Max" />
+                            <input class="amount" name="Amount" value="@((ViewData["CurrentAmount"] as string[])[1])" type="text" placeholder="Max" />
                         }
                         else
                         {
@@ -139,7 +168,7 @@
                             for (int i = 1; i <= 5; i++)
                             {
                                 check = false;
-                                foreach (var item in ViewData["CurrentFear"] as List<string>)
+                                foreach (var item in ViewData["CurrentFear"] as string[])
                                 {
                                     if (item.Equals(i.ToString()))
                                     {

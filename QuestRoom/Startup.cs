@@ -57,28 +57,7 @@ namespace QuestRoom
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(
                     name: "questroom",
-                    pattern: "questrooms",
-                    defaults: new {controller = "QuestRoom", action = "Index" }
-                    );
-                endpoints.MapControllerRoute(
-                    name: "questroombyid",
-                    pattern: "questrooms/{id}",
-                    defaults: new { controller = "QuestRoom", action = "Details" }
-                    );
-                endpoints.MapControllerRoute(
-                    name: "createquestroom",
-                    pattern: "questrooms/create",
-                    defaults: new { controller = "QuestRoom", action = "Create" }
-                    );
-                endpoints.MapControllerRoute(
-                    name: "editquestroom",
-                    pattern: "questrooms/edit/{id}",
-                    defaults: new { controller = "QuestRoom", action = "Edit" }
-                    );
-                endpoints.MapControllerRoute(
-                    name: "editquestroom",
-                    pattern: "questrooms/delete/{id}",
-                    defaults: new { controller = "QuestRoom", action = "Delete" }
+                    pattern: "{controller=Home}/{action=Index}/{id?}"
                     );
             });
         }
