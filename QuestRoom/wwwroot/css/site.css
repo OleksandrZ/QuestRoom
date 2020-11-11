@@ -1,6 +1,15 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
@@ -18,7 +27,8 @@ a {
   border-color: #1861ac;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
@@ -29,6 +39,7 @@ a {
 html {
   font-size: 14px;
 }
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
@@ -38,6 +49,7 @@ html {
 .border-top {
   border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
   border-bottom: 1px solid #e5e5e5;
 }
@@ -62,77 +74,90 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+
 .footer {
   position: absolute;
   bottom: 0;
   width: 100%;
   white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+  line-height: 60px;
+  /* Vertically center the text there */
 }
 
-td{
-    border: 1px solid black;
-    padding:0 5px;
+td {
+  border: 1px solid black;
+  padding: 0 5px;
 }
 
 .post-tags {
-    display: block;
+  display: block;
 }
+
 span.post-tag {
-     vertical-align: baseline; 
+  vertical-align: baseline;
 }
 
 .info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start !important;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start !important;
 }
+
 .space {
-    display: block;
-    height: 57px !important;
+  display: block;
+  height: 57px !important;
 }
 
-.section-lg, .section-xl, .section-xxl {
-    padding: 50px 0 !important;
+.section-lg,
+.section-xl,
+.section-xxl {
+  padding: 50px 0 !important;
 }
 
-.svg-fire{
-    height:25px;
-    vertical-align:bottom;
+.svg-fire {
+  height: 25px;
+  vertical-align: bottom;
+  display: inline;
 }
 
 .int-arrow-up::before {
-    content: '\f062' !important;
+  content: '\f062' !important;
 }
 
-.field-validation-valid, field-validation-error {
-    color: red;
+.field-validation-valid,
+field-validation-error {
+  color: red;
 }
 
-body{
-    min-height:100%;
+body {
+  min-height: 100%;
 }
 
 footer {
-    padding: 0 !important;
-    height:50px;
+  padding: 0 !important;
+  height: 50px;
 }
 
-.widget-body p{
-    margin-bottom:0;
+.widget-body p {
+  margin-bottom: 0;
 }
 
-.amount{
-    display:inline;
-    width:15%;
+.amount {
+  display: inline;
+  width: 15%;
 }
 
-#images{
-    display:flex;
-    flex-wrap:wrap;
+#images {
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.img{
-    flex-basis:15%;
-    margin:5px;
+.img {
+  flex-basis: 15%;
+  margin: 5px;
+}
+
+#logout{
+    border: none;
+    background: white;
 }

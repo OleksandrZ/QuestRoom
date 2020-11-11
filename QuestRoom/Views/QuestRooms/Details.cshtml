@@ -1,89 +1,178 @@
 ﻿@model Room
+@using Microsoft.AspNetCore.Identity
+@using QuestRoom.Areas.Identity.Data
+@inject UserManager<QuestRoomUser> UserManager
 @{
     ViewData["Title"] = "QuestRoom";
 }
-<table>
-    <tr>
-        <td>
-            Name
-        </td>
-        <td>
-            Description
-        </td>
-        <td>
-            Time Of Passing
-        </td>
-        <td>
-            Min Amount Of Players
-        </td>
-        <td>
-            Max Amount Of Players
-        </td>
-        <td>
-            Min Age
-        </td>
-        <td>
-            Address
-        </td>
-        <td>
-            Email
-        </td>
-        <td>
-            PhoneNumber
-        </td>
-        <td>
-            Company
-        </td>
-        <td>
-            Rating
-        </td>
-        <td>
-            Level Of Fear
-        </td>
-        <td>
-            Level Of Difficulty
-        </td>
-    </tr>
 
-    <tr>
-        <td>
-            @Html.DisplayFor(model => model.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.TimeOfPassing)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.MinAmountOfPlayers)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.MaxAmountOfPlayers)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.MinAge)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.Address)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.Company)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.Rating)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.LevelOfFear)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.LevelOfDifficulty)
-        </td>
-    </tr>
-</table>
+<section class="content">
+    <div class="room-details">
+        <div class="room-details-item">
+            <div class="room-details-item-title">
+                @Model.Name
+            </div>
+        </div>
+        <div class="room-details-item meta">
+            <ul>
+                <li>
+                    @{
+                        for (int i = 0; i < (int)Model.Rating; i++)
+                        {
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                        }
+                        if ((Model.Rating - (int)Model.Rating) > 0)
+                        {
+                            <i class="fa fa-star-half-o" aria-hidden="true"></i>
+                        }
+                    }
+                </li>
+                <li>
+                    @Model.MinAmountOfPlayers - @Model.MaxAmountOfPlayers
+                </li>
+                <li>
+                    Company: @Model.Company
+                </li>
+                <li>
+                    <i class="fa fa-phone" aria-hidden="true"></i>
+                    @Model.PhoneNumber
+                </li>
+                <li>
+                    @Model.LevelOfDifficulty
+                </li>
+                <li>
+                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    @Model.TimeOfPassing minutes
+                </li>
+                <li>
+                    @Model.Email
+                </li>
+            </ul>
+        </div>
+        <div class="room-details-item image">
+            @if (Model.Images.Count > 0)
+            {
+                <img src="@("../" + Model.Images[0].Path)" id="MainImg" itemprop="thumbnail" alt="@Model.Images[0].Name" />
+            }
+            else
+            {
+                <img src="../images/image-05-760x489.jpg" id="MainImg" itemprop="thumbnail" />
+            }
+            <span id="expand">W</span>
+            <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+                <!-- Background of PhotoSwipe.
+                It's a separate element as animating opacity is faster than rgba(). -->
+                <div class="pswp__bg"></div>
+
+                <!-- Slides wrapper with overflow:hidden. -->
+                <div class="pswp__scroll-wrap">
+
+                    <!-- Container that holds slides.
+                    PhotoSwipe keeps only 3 of them in the DOM to save memory.
+                    Don't modify these 3 pswp__item elements, data is added later on. -->
+                    <div class="pswp__container">
+                        <div class="pswp__item"></div>
+                        <div class="pswp__item"></div>
+                        <div class="pswp__item"></div>
+                    </div>
+
+                    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+                    <div class="pswp__ui pswp__ui--hidden">
+
+                        <div class="pswp__top-bar">
+
+                            <!--  Controls are self-explanatory. Order can be changed. -->
+
+                            <div class="pswp__counter"></div>
+
+                            <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                            <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                            <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                            <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                            <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                            <!-- element will get class pswp__preloader--active when preloader is running -->
+                            <div class="pswp__preloader">
+                                <div class="pswp__preloader__icn">
+                                    <div class="pswp__preloader__cut">
+                                        <div class="pswp__preloader__donut"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                            <div class="pswp__share-tooltip"></div>
+                        </div>
+
+                        <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+                        </button>
+
+                        <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+                        </button>
+
+                        <div class="pswp__caption">
+                            <div class="pswp__caption__center"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="room-details-item">
+            <h1>@Model.Description</h1>
+        </div>
+        @if ((await UserManager.GetRolesAsync(await UserManager.FindByNameAsync(User.Identity.Name))).Contains("Admin"))
+        {
+            <div class="room-details-item buttons">
+                <a class="btn btn-secondary" id="delete" href="/admin/delete/@Model.Id">Delete</a>
+            </div>
+            <div class="room-details-item buttons">
+                <a class="btn btn-secondary" id="edit" href="/admin/edit/@Model.Id">Edit</a>
+            </div>
+        }
+    </div>
+</section>
+
+@*
+    gallery display onclick
+*@
+<script src="~/js/photoswipe.min.js"></script>
+<script src="~/js/photoswipe-ui-default.min.js"></script>
+<script>
+    var openPhotoSwipe = function () {
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+    images = @Json.Serialize(Model.Images);
+    var items = [];
+
+    images.forEach(image => {
+    items.push(
+    {
+    src: '../' + image.path,
+    w: image.width,
+    h: image.height
+    }
+    );
+    });
+
+    console.log(items);
+
+    // define options (if needed)
+    var options = {
+    // history & focus options are disabled on CodePen
+    history: false,
+    focus: false,
+
+    showAnimationDuration: 0,
+    hideAnimationDuration: 0
+
+    };
+
+    var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+    gallery.init();
+    };
+
+    document.getElementById('MainImg').onclick = openPhotoSwipe;
+</script>

@@ -1,188 +1,181 @@
 ﻿@using QuestRoom.Models
+@using Microsoft.AspNetCore.Identity
+@using QuestRoom.Areas.Identity.Data
 @model PaginatedList<Room>
+@inject UserManager<QuestRoomUser> UserManager
 @{
     ViewData["Title"] = "QuestRoom";
 }
-<section class="section section-lg bg-transparent novi-background" data-preset='{"title":"Blog Boxed","category":"blog","reload":true,"id":"blog-boxed-2"}'>
-    <div class="container">
-        <div class="row row-40 justify-content-lg-between">
-            <div class="col-md-8 post-area">
-                <h1>Quest Rooms</h1>
-                <!-- Post boxed-->
-                @foreach (Room room in Model)
-                {
-                    <div class="post post-boxed">
-                        <div class="post-meta post-meta-between">
-                            <div class="post-meta-item"><a class="post-meta-link post-meta-linkbox post-meta-linkbox-primary" href="/QuestRooms/@room.Id">@room.Company</a></div>
-                            <div class="post-meta-item">
-                                <span>
-                                    <i class="fa fa-clock-o" aria-hidden="true"></i>
-                                    @room.TimeOfPassing минут
-                                </span>
-                            </div>
-                            <div class="post-meta-item">
-                                <span>
-                                    @{
-                                        for (int i = 0; i < (int)room.Rating; i++)
-                                        {
-                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                        }
-                                        if ((room.Rating - (int)room.Rating) > 0)
-                                        {
-                                            <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                        }
-                                    }
-                                </span>
-                            </div>
-                        </div>
-                        <h3 class="post-title">
-                            <a href="/QuestRooms/@room.Id">@room.Name</a>
-                        </h3>
-                        <a class="post-img-link" href="/QuestRooms/@room.Id">
-                            @if (room.Images.Count > 0)
-                            {
-                                <img src="@("data:image/jpg;base64," + Convert.ToBase64String(room.Images[0].Content))" alt="" width="760" height="489" />
-                            }
-                            else
-                            {
-                                <img src="images/image-05-760x489.jpg" alt="" width="760" height="489" />
-                            }
-                        </a>
-                        <div class="post-text">@room.Description</div>
-                        <div class="post-meta post-meta-between post-meta-lg">
-                            <div class="post-meta-item info">
-                                <div class="post-tags">
-                                    Количество игроков: <span class="post-tag">@room.MinAmountOfPlayers - @room.MaxAmountOfPlayers</span>
-                                </div>
-                                <div class="post-tags">
-                                    Сложность:
-                                    @{
-                                        for (int i = 0; i < (int)room.LevelOfDifficulty; i++)
-                                        {
-                                            <img class="svg-fire" src="~/images/fire.svg" />
-                                        }
-                                    }
-                                </div>
-                            </div>
-                            <div class="post-meta-item"><a class="btn btn-secondary" href="/QuestRooms/@room.Id">Read more</a></div>
+
+<section class="content">
+    <div class="rooms">
+        <h1>Quest Rooms</h1>
+        @foreach (Room room in Model)
+        {
+            <div class="room">
+                <div class="post-meta">
+                    <div class="post-meta-item">
+                        <div class="company">
+                            @room.Company
                         </div>
                     </div>
+                    <div class="post-meta-item">
+                        <div class="time">
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                            @room.TimeOfPassing minutes
+                        </div>
+                    </div>
+                    <div class="post-meta-item justify-end">
+                        <div class="rating">
+                            @{
+                                for (int i = 0; i < (int)room.Rating; i++)
+                                {
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                }
+                                if ((room.Rating - (int)room.Rating) > 0)
+                                {
+                                    <i class="fa fa-star-half-o" aria-hidden="true"></i>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="post-title">
+                    <a href="/QuestRooms/@room.Id">@room.Name</a>
+                </div>
+                @if (room.Images.Count > 0)
+                {
+                    <img src="@room.Images[0].Path" />
                 }
-                @{
-                    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-                    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+                else
+                {
+                    <img src="images/image-05-760x489.jpg" alt="" />
                 }
-                <a href="@(Url.Page("", new
+                <div class="post-text">
+                    @room.Description
+                </div>
+                <div class="post-meta">
+                    <div class="post-meta-item column">
+                        <div class="post-info">
+                            Количество игроков: @room.MinAmountOfPlayers - @room.MaxAmountOfPlayers
+                        </div>
+                        <div class="post-info">
+                            Сложность:
+                            @{
+                                for (int i = 0; i < (int)room.LevelOfDifficulty; i++)
+                                {
+                                    <img class="svg-fire" src="~/images/fire.svg" />
+                                }
+                            }
+                        </div>
+                    </div>
+                    @if ((await UserManager.GetRolesAsync(await UserManager.FindByNameAsync(User.Identity.Name))).Contains("Admin"))
+                    {
+                        <div class="post-meta-item justify-end">
+                            <a class="btn btn-secondary" id="delete" href="/admin/delete/@room.Id">Delete</a>
+                        </div>
+                        <div class="post-meta-item justify-end">
+                            <a class="btn btn-secondary" id="edit" href="/admin/edit/@room.Id">Edit</a>
+                        </div>
+                    }
+                    <div class="post-meta-item justify-end">
+                        <a class="btn btn-secondary" href="/QuestRooms/@room.Id">Read more</a>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="paginating">
+            @{
+                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+            }
+            <a href="@(Url.Page("", new
                      {
                          difficulties = ViewData["CurrentDifficulty"] as string[],
                          Amount = ViewData["CurrentAmount"] as string[],
                          Fear = ViewData["CurrentFear"] as string[],
                          page = Model.PageIndex - 1
                      }))" class="btn btn-default @prevDisabled">
-                    Previous
-                </a>
-                <a href="@(Url.Page("", new
+                Previous
+            </a>
+            <a href="@(Url.Page("", new
                      {
                          difficulties = ViewData["CurrentDifficulty"] as string[],
                          Amount = ViewData["CurrentAmount"] as string[],
                          Fear = ViewData["CurrentFear"] as string[],
                          page = Model.PageIndex + 1
                      }))" class="btn btn-default @nextDisabled">
-                    Next
-                </a>
-                @*<a asp-action="Index"
-                       asp-route-difficulties="@difficulties"
-                       asp-route-Amount="@amount"
-                       asp-route-Fear="@fearLevel"
-                       asp-route-page="@(Model.PageIndex - 1)"
-                       class="btn btn-default @prevDisabled">
-                        Previous
-                    </a>
-                    <a asp-action="Index"
-                       asp-route-difficulties="@difficulties"
-                       asp-route-Amount="@amount"
-                       asp-route-Fear="@fearLevel"
-                       asp-route-page="@(Model.PageIndex + 1)"
-                       class="btn btn-default @nextDisabled">
-                        Next
-                    </a>*@
-            </div>
-            <div class="col-md-4 col-xxl-3 widget-area">
-                <div class="widget widget-search">
-                    <h6 class="widget-title">About us</h6>
-                    <div class="widget-body">
-                        <form class="widget-search-form" asp-action="Index" method="GET">
-                            <div class="input-group">
-                                <input class="form-control" name="SearchString" value="@ViewData["CurrentSearch"]" type="text" placeholder="Search..." autocomplete="off">
-                                <div class="input-group-append">
-                                    <button class="widget-search-btn input-group-text input-group-text-nodivider novi-icon">
-                                        <i class="fa fa-search" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                        <div class="widget-search-results"></div>
-                    </div>
-                </div>
-                <form class="widget">
-                    <h6 class="widget-title">Difficulties:</h6>
-                    <div class="widget-body">
-
-                        @{
-                            Difficulty difficulty = Difficulty.Begginer;
-                            bool check = false;
-                            for (; difficulty <= Difficulty.Expert; difficulty++)
-                            {
-                                check = false;
-                                foreach (var item in ViewData["CurrentDifficulty"] as string[])
-                                {
-                                    if (item.Equals(difficulty.ToString()))
-                                    {
-                                        check = true;
-                                    }
-                                }
-
-                                <p><input name="difficulties" id="@difficulty" value="@difficulty" type="checkbox" checked="@check"> <label for="@difficulty">@difficulty</label></p>
-                            }
-                        }
-                    </div>
-                    <h6 class="widget-title">Amount of players:</h6>
-                    <div class="widget-body">
-                        @if ((ViewData["CurrentAmount"] as string[]).Length > 0)
-                        {
-                            <input class="amount" name="Amount" value="@((ViewData["CurrentAmount"] as string[])[0])" type="text" placeholder="Min" />
-                            <span>-</span>
-                            <input class="amount" name="Amount" value="@((ViewData["CurrentAmount"] as string[])[1])" type="text" placeholder="Max" />
-                        }
-                        else
-                        {
-                            <input class="amount" name="Amount" value="1" type="text" placeholder="Min" />
-                            <span>-</span>
-                            <input class="amount" name="Amount" value="20" type="text" placeholder="Max" />
-                        }
-                        @**@
-                    </div>
-                    <h6 class="widget-title">Level of fear:</h6>
-                    <div class="widget-body">
-                        @{
-                            for (int i = 1; i <= 5; i++)
-                            {
-                                check = false;
-                                foreach (var item in ViewData["CurrentFear"] as string[])
-                                {
-                                    if (item.Equals(i.ToString()))
-                                    {
-                                        check = true;
-                                    }
-                                }
-
-                                <p><input name="Fear" id="fear @i" value="@i" type="checkbox" checked="@check"> <label for="fear @i">@i</label></p>
-                            }
-                        }
-                    </div>
-                    <button class="btn btn-primary" type="submit">Filter</button>
-                </form>
-            </div>
+                Next
+            </a>
         </div>
+    </div>
+    <div class="sidebar">
+        <p class="sidebar-title">About us</p>
+        <form action="" method="post">
+            <input type="text" name="SearchString" value="@ViewData["CurrentSearch"]" placeholder="Search..." autocomplete="off" class="search">
+            <button type="submit" class="submit-search"><i class="fa fa-search" aria-hidden="true"></i></button>
+        </form>
+        <form action="" method="post" class="filters">
+            <div class="filter">
+                <div class="filter-title">Difficulties:</div>
+                <div class="filter-body">
+                    @{
+                        Difficulty difficulty = Difficulty.Begginer;
+                        bool check = false;
+                        for (; difficulty <= Difficulty.Expert; difficulty++)
+                        {
+                            check = false;
+                            foreach (var item in ViewData["CurrentDifficulty"] as string[])
+                            {
+                                if (item.Equals(difficulty.ToString()))
+                                {
+                                    check = true;
+                                }
+                            }
+
+                            <p><input name="difficulties" id="@difficulty" value="@difficulty" type="checkbox" checked="@check"> <label for="@difficulty">@difficulty</label></p>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="filter">
+                <div class="filter-title">Amount of players:</div>
+                <div class="filter-body">
+                    @if ((ViewData["CurrentAmount"] as string[]).Length > 0)
+                    {
+                        <input class="amount" name="Amount" value="@((ViewData["CurrentAmount"] as string[])[0])" type="text" placeholder="Min" />
+                        <span>-</span>
+                        <input class="amount" name="Amount" value="@((ViewData["CurrentAmount"] as string[])[1])" type="text" placeholder="Max" />
+                    }
+                    else
+                    {
+                        <input class="amount" name="Amount" value="1" type="text" placeholder="Min" />
+                        <span>-</span>
+                        <input class="amount" name="Amount" value="20" type="text" placeholder="Max" />
+                    }
+                </div>
+            </div>
+            <div class="filter">
+                <div class="filter-title">Level of fear:</div>
+                <div class="filter-body">
+                    @{
+                        for (int i = 1; i <= 5; i++)
+                        {
+                            check = false;
+                            foreach (var item in ViewData["CurrentFear"] as string[])
+                            {
+                                if (item.Equals(i.ToString()))
+                                {
+                                    check = true;
+                                }
+                            }
+
+                            <p><input name="Fear" id="fear @i" value="@i" type="checkbox" checked="@check"> <label for="fear @i">@i</label></p>
+                        }
+                    }
+                </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Filter</button>
+        </form>
     </div>
 </section>

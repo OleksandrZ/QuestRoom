@@ -1,0 +1,74 @@
+h1 {
+    text-align: center;
+}
+
+.room-details {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.room-details-item {
+    flex-basis: 100%;
+}
+
+.room-details-item img {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    /* height: 100; */
+}
+
+.room-details-item.image
+{
+    display: flex;
+    justify-content: center;
+}
+
+.room-details-item-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.meta {
+    position: relative;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.meta ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+}
+
+.meta ul li {
+    font-size: 90%;
+    margin: 0 15px 10px 0;
+    color: #999;
+
+}
+
+.meta ul li::before {
+    content: '\205E';
+    width: 5px;
+    text-align: center;
+    display: inline-block;
+    margin-right: 15px;
+    opacity: .5;
+
+}
+
+.room-details-item.buttons{
+    display: flex;
+    justify-content: center;
+}
+
+.buttons{
+    padding: 3px 0;
+}
