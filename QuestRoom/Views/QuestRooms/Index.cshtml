@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Identity
 @using QuestRoom.Areas.Identity.Data
 @model PaginatedList<Room>
+@inject SignInManager<QuestRoomUser> SignInManager
 @inject UserManager<QuestRoomUser> UserManager
 @{
     ViewData["Title"] = "QuestRoom";
@@ -69,14 +70,17 @@
                             }
                         </div>
                     </div>
-                    @if ((await UserManager.GetRolesAsync(await UserManager.FindByNameAsync(User.Identity.Name))).Contains("Admin"))
+                    @if (SignInManager.IsSignedIn(User))
                     {
-                        <div class="post-meta-item justify-end">
-                            <a class="btn btn-secondary" id="delete" href="/admin/delete/@room.Id">Delete</a>
-                        </div>
-                        <div class="post-meta-item justify-end">
-                            <a class="btn btn-secondary" id="edit" href="/admin/edit/@room.Id">Edit</a>
-                        </div>
+                        @if ((await UserManager.GetRolesAsync(await UserManager.FindByNameAsync(User.Identity.Name))).Contains("Admin"))
+                        {
+                            <div class="post-meta-item justify-end">
+                                <a class="btn btn-secondary" id="delete" href="/admin/delete/@room.Id">Delete</a>
+                            </div>
+                            <div class="post-meta-item justify-end">
+                                <a class="btn btn-secondary" id="edit" href="/admin/edit/@room.Id">Edit</a>
+                            </div>
+                        }
                     }
                     <div class="post-meta-item justify-end">
                         <a class="btn btn-secondary" href="/QuestRooms/@room.Id">Read more</a>
